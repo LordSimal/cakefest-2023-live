@@ -11,8 +11,8 @@ use Cake\ORM\Entity;
  * @property int $id
  * @property string $name
  * @property int $repository_id
- * @property \Cake\I18n\FrozenTime $created
- * @property \Cake\I18n\FrozenTime $modified
+ * @property \Cake\I18n\DateTime $created
+ * @property \Cake\I18n\DateTime $modified
  *
  * @property \App\Model\Entity\Repository $repository
  */
@@ -27,7 +27,7 @@ class Branch extends Entity
      *
      * @var array<string, bool>
      */
-    protected $_accessible = [
+    protected array $_accessible = [
         'name' => true,
         'repository_id' => true,
         'created' => true,

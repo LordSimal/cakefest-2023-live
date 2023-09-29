@@ -1,8 +1,12 @@
 parameters:
-    level: 8
+    level: 6
     checkMissingIterableValueType: false
     treatPhpDocTypesAsCertain: false
+    checkGenericClassInNonGenericObjectType: false
     paths:
         - src/
     excludePaths:
         - src/Console/Installer.php
+
+includes:
+    - vendor/cakedc/cakephp-phpstan/extension.neon

@@ -4,7 +4,6 @@ declare(strict_types=1);
 namespace App\Controller;
 
 use App\Services\RepositorySync;
-use Github\Api\Repo;
 
 /**
  * Repositories Controller
@@ -35,9 +34,7 @@ class RepositoriesController extends AppController
      */
     public function view($id = null)
     {
-        $repository = $this->Repositories->get($id, [
-            'contain' => ['Branches'],
-        ]);
+        $repository = $this->Repositories->get($id, contain: ['Branches']);
 
         $this->set(compact('repository'));
     }
@@ -71,9 +68,7 @@ class RepositoriesController extends AppController
      */
     public function edit($id = null)
     {
-        $repository = $this->Repositories->get($id, [
-            'contain' => [],
-        ]);
+        $repository = $this->Repositories->get($id, contain: []);
         if ($this->request->is(['patch', 'post', 'put'])) {
             $repository = $this->Repositories->patchEntity($repository, $this->request->getData());
             if ($this->Repositories->save($repository)) {
@@ -106,6 +101,10 @@ class RepositoriesController extends AppController
         return $this->redirect(['action' => 'index']);
     }
 
+    /**
+     * @param \App\Services\RepositorySync $service DI injected
+     * @return void
+     */
     public function sync(RepositorySync $service): void
     {
         $service->sync();

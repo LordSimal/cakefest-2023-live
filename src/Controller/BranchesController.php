@@ -35,9 +35,7 @@ class BranchesController extends AppController
      */
     public function view($id = null)
     {
-        $branch = $this->Branches->get($id, [
-            'contain' => ['Repositories'],
-        ]);
+        $branch = $this->Branches->get($id, contain: ['Repositories']);
 
         $this->set(compact('branch'));
     }
@@ -72,9 +70,7 @@ class BranchesController extends AppController
      */
     public function edit($id = null)
     {
-        $branch = $this->Branches->get($id, [
-            'contain' => [],
-        ]);
+        $branch = $this->Branches->get($id, contain: []);
         if ($this->request->is(['patch', 'post', 'put'])) {
             $branch = $this->Branches->patchEntity($branch, $this->request->getData());
             if ($this->Branches->save($branch)) {

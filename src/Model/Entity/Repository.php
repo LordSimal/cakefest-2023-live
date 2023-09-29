@@ -14,8 +14,8 @@ use Cake\ORM\Entity;
  * @property int $forks
  * @property int $open_issues
  * @property int $external_ident
- * @property \Cake\I18n\FrozenTime $created
- * @property \Cake\I18n\FrozenTime $modified
+ * @property \Cake\I18n\DateTime $created
+ * @property \Cake\I18n\DateTime $modified
  *
  * @property \App\Model\Entity\Branch[] $branches
  */
@@ -30,7 +30,7 @@ class Repository extends Entity
      *
      * @var array<string, bool>
      */
-    protected $_accessible = [
+    protected array $_accessible = [
         'name' => true,
         'url' => true,
         'forks' => true,

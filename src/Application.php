@@ -16,7 +16,6 @@ declare(strict_types=1);
  */
 namespace App;
 
-use App\Services\RepositorySync;
 use Cake\Core\Configure;
 use Cake\Core\ContainerInterface;
 use Cake\Datasource\FactoryLocator;
@@ -116,7 +115,14 @@ class Application extends BaseApplication
      */
     public function services(ContainerInterface $container): void
     {
-        $container->add(RepositorySync::class);
+        /** @var \League\Container\Container $container */
+        $container->add(\Cake\Controller\ComponentRegistry::class);
+        $container->delegate(
+            new \League\Container\ReflectionContainer()
+        );
+        //$container->add(RepositorySync::class)
+        //    ->addArgument(RepositoryClient::class);
+        //$container->add(RepositoryClient::class);
     }
 
     /**

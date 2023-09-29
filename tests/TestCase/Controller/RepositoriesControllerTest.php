@@ -3,7 +3,7 @@ declare(strict_types=1);
 
 namespace App\Test\TestCase\Controller;
 
-use App\Controller\RepositoriesController;
+use App\Services\RepositoryClient;
 use App\Services\RepositorySync;
 use Cake\Http\TestSuite\HttpClientTrait;
 use Cake\TestSuite\IntegrationTestTrait;
@@ -39,7 +39,7 @@ class RepositoriesControllerTest extends TestCase
     {
         $this->get([
             'controller' => 'Repositories',
-            'action' => 'index'
+            'action' => 'index',
         ]);
         $this->assertResponseOk();
     }
@@ -55,7 +55,7 @@ class RepositoriesControllerTest extends TestCase
         $this->get([
             'controller' => 'Repositories',
             'action' => 'view',
-            1
+            1,
         ]);
         $this->assertResponseOk();
     }
@@ -81,7 +81,7 @@ class RepositoriesControllerTest extends TestCase
         ]);
         $this->assertRedirect([
             'controller' => 'Repositories',
-            'action' => 'index'
+            'action' => 'index',
         ]);
         $repositories = $this->getTableLocator()->get('Repositories');
         $query = $repositories->find()->where(['name' => 'Live Cake']);
@@ -100,7 +100,7 @@ class RepositoriesControllerTest extends TestCase
         $this->post([
             'controller' => 'Repositories',
             'action' => 'edit',
-            1
+            1,
         ], [
             'name' => 'Live Cake',
             'url' => 'Testing',
@@ -110,7 +110,7 @@ class RepositoriesControllerTest extends TestCase
         ]);
         $this->assertRedirect([
             'controller' => 'Repositories',
-            'action' => 'index'
+            'action' => 'index',
         ]);
         $repositories = $this->getTableLocator()->get('Repositories');
         $query = $repositories->find()->where(['name' => 'Live Cake']);
@@ -129,11 +129,11 @@ class RepositoriesControllerTest extends TestCase
         $this->post([
             'controller' => 'Repositories',
             'action' => 'delete',
-            1
+            1,
         ]);
         $this->assertRedirect([
             'controller' => 'Repositories',
-            'action' => 'index'
+            'action' => 'index',
         ]);
         $repositories = $this->getTableLocator()->get('Repositories');
         $query = $repositories->find();
@@ -151,18 +151,18 @@ class RepositoriesControllerTest extends TestCase
         $this->post([
             'controller' => 'Repositories',
             'action' => 'delete',
-            1
+            1,
         ]);
         $this->assertFlashMessage('The repository could not be deleted. Please, try again.');
         $this->assertRedirect([
             'controller' => 'Repositories',
-            'action' => 'index'
+            'action' => 'index',
         ]);
     }
 
     public function testSync(): void
     {
-        $this->mockService(RepositorySync::class, function(){
+        $this->mockService(RepositorySync::class, function () {
             $mock = $this->createMock(RepositorySync::class);
             $mock->expects($this->once())->method('sync');
 
@@ -193,6 +193,33 @@ class RepositoriesControllerTest extends TestCase
                 file_get_contents(TESTS . 'APIResponses' . DS . 'onebranch.json')
             )
         );
+        $this->get([
+            'controller' => 'Repositories',
+            'action' => 'sync',
+        ]);
+        $this->assertResponseOk();
+    }
+
+    public function testSyncCustomClientMock(): void
+    {
+        $this->disableErrorHandlerMiddleware();
+        $this->mockService(RepositoryClient::class, function () {
+            $mock = $this->createMock(RepositoryClient::class);
+
+            $repoJson = file_get_contents(TESTS . 'APIResponses' . DS . 'onerepo.json');
+            $mock->expects($this->once())
+               ->method('org')
+               ->with('cakephp')
+               ->willReturn(json_decode($repoJson, true));
+
+            $branchesJson = file_get_contents(TESTS . 'APIResponses' . DS . 'onebranch.json');
+            $mock->expects($this->once())
+                ->method('branches')
+                ->with('cakephp', 'localized')
+                ->willReturn(json_decode($branchesJson, true));
+
+            return $mock;
+        });
         $this->get([
             'controller' => 'Repositories',
             'action' => 'sync',
