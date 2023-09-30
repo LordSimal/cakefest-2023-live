@@ -9,6 +9,7 @@
         "cakephp/cakephp": "^5.0.0",
         "cakephp/migrations": "^4.0.0",
         "cakephp/plugin-installer": "^2.0",
+        "knplabs/github-api": "dev-master",
         "mobiledetect/mobiledetectlib": "^3.74",
         "symfony/http-client": "^6.3"
     },

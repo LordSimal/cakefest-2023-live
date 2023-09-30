@@ -69,8 +69,8 @@ class PagesControllerTest extends TestCase
         $this->get('/pages/not_existing');
 
         $this->assertResponseFailure();
-        $this->assertResponseContains('Missing Template');
-        $this->assertResponseContains('Stacktrace');
+        $this->assertResponseContains('MissingTemplate');
+        $this->assertResponseContains('stack-frames');
         $this->assertResponseContains('not_existing.php');
     }
 
